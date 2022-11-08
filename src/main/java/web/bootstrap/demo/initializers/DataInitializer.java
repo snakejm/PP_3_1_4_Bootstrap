@@ -35,15 +35,22 @@ public class DataInitializer {
             roleService.addRole(roleUser);
         }
 
-        User admin = userService.findUserByEmail("admin@main.com");
+        User admin = userService.findUserByEmail("admin@mail.com");
         if (admin == null) {
-            admin = new User("admin", "admin", "admin@main.com", List.of(roleAdmin, roleUser));
+            admin = new User("admin", "admin", "admin@mail.com", List.of(roleAdmin, roleUser));
             userService.addUser(admin);
         }
-        User user = userService.findUserByEmail("user@main.com");
+        User user = userService.findUserByEmail("user@mail.com");
         if (user == null) {
-            user = new User("user", "user", "user@main.com", List.of(roleUser));
+            user = new User("user", "user", "user@mail.com", List.of(roleUser));
             userService.addUser(user);
+        }
+
+//        TODO DELETE User a
+        User a = userService.findUserByEmail("a@");
+        if (a == null) {
+            a = new User("a", "a", "a@", List.of(roleAdmin, roleUser));
+            userService.addUser(a);
         }
 
     }

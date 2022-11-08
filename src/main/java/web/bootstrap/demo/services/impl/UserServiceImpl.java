@@ -19,13 +19,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    {
-        passwordEncoder = new BCryptPasswordEncoder(12);
-    }
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -66,8 +63,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не найдено"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.err.println(email);
+        String email1="a@";
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> {
+                    System.err.println(email+" not found");
+                    return new UsernameNotFoundException("Пользователя не найдено");
+                });
     }
 }
