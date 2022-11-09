@@ -13,7 +13,7 @@ public interface UserService extends UserDetailsService {
 
     User findUserById(long id);
 
-    User findUserByEmail(String email);
+    User findUserByLogin(String login);
 
     void udpateUser(User user);
 

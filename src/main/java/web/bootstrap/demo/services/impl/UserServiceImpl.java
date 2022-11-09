@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElse(null);
+    public User findUserByLogin(String login) {
+        return userRepository.findUserByLogin(login).orElse(null);
     }
 
     @Override
@@ -64,11 +64,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.err.println(email);
-        String email1="a@";
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> {
-                    System.err.println(email+" not found");
                     return new UsernameNotFoundException("Пользователя не найдено");
                 });
     }

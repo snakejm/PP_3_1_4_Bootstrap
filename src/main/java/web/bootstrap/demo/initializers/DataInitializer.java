@@ -35,19 +35,19 @@ public class DataInitializer {
             roleService.addRole(roleUser);
         }
 
-        User admin = userService.findUserByEmail("admin@mail.com");
+        User admin = userService.findUserByLogin("admin");
         if (admin == null) {
             admin = new User("admin", "admin", "admin@mail.com", List.of(roleAdmin, roleUser));
             userService.addUser(admin);
         }
-        User user = userService.findUserByEmail("user@mail.com");
+        User user = userService.findUserByLogin("user");
         if (user == null) {
             user = new User("user", "user", "user@mail.com", List.of(roleUser));
             userService.addUser(user);
         }
 
 //        TODO DELETE User a
-        User a = userService.findUserByEmail("a@");
+        User a = userService.findUserByLogin("a");
         if (a == null) {
             a = new User("a", "a", "a@", List.of(roleAdmin, roleUser));
             userService.addUser(a);

@@ -24,8 +24,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "login", unique = true)
+    private String login;
 
     @Column(name = "password")
     private String password;
@@ -39,26 +39,19 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
+
     public User() {
     }
 
-    public User(String username, String password, String email, List<Role> roles) {
-        this.username = username;
+    public User(String login, String password, String email, List<Role> roles) {
+        this.login = login;
         this.password = password;
         this.email = email;
         this.roles = roles;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -86,10 +79,23 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public long getId() {
+        return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
@@ -118,7 +124,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
