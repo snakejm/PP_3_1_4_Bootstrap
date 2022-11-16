@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Spring Security Example</title>
 </head>
 <body>
@@ -8,7 +9,7 @@
 <h1>Добро пожаловать! Вы зашли под пользователем:</h1>
 <table>
     <tr>
-        <td th:text="'Логин = ' + ${user.getUsername()}">username</td>
+        <td th:text="'Логин = ' + ${user.getLogin()}">login</td>
     </tr>
     <tr>
         <td th:text="'Email = ' + ${user.getEmail()}">email</td>

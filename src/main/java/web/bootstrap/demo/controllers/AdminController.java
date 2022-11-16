@@ -31,8 +31,9 @@ public class AdminController {
 
     @GetMapping
     public String showAllUsers(Model model, Principal principal) {
-        model.addAttribute("logout", userService.loadUserByUsername(principal.getName()));
+        model.addAttribute("logout", userService.findUserByEmail(principal.getName()));
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", roleService.listRoles());
         return "admin/index";
     }
 
@@ -50,7 +51,7 @@ public class AdminController {
 
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user, Model model, Principal principal) {
-        model.addAttribute("logout", userService.loadUserByUsername(principal.getName()));
+        model.addAttribute("logout", userService.findUserByEmail(principal.getName()));
         model.addAttribute("roles", roleService.listRoles());
         return "admin/new";
     }
@@ -61,15 +62,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") long id, Principal principal) {
-        model.addAttribute("logout", userService.loadUserByUsername(principal.getName()));
-        model.addAttribute("roles", roleService.listRoles());
-        model.addAttribute("user", userService.findUserById(id));
-        return "admin/edit";
-    }
-
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/edit")
     public String update(@ModelAttribute("user") User user) {
         userService.udpateUser(user);
         return "redirect:/admin";

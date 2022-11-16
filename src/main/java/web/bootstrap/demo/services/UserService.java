@@ -13,7 +13,9 @@ public interface UserService extends UserDetailsService {
 
     User findUserById(long id);
 
-    User findUserByLogin(String login);
+    User findUserByFirstName(String firstName);
+
+    User findUserByEmail(String email);
 
     void udpateUser(User user);
 

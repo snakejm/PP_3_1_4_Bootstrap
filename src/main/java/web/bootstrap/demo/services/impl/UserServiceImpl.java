@@ -6,26 +6,34 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import web.bootstrap.demo.models.User;
 import web.bootstrap.demo.repositories.UserRepository;
+import web.bootstrap.demo.services.RoleService;
 import web.bootstrap.demo.services.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
+//@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     @Override
+//    @Transactional
     public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -42,31 +50,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        return userRepository.findUserByLogin(login).orElse(null);
+    public User findUserByFirstName(String firstName) {
+        return userRepository.findUserByFirstName(firstName).orElse(null);
     }
 
     @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElse(null);
+    }
+
+    @Override
+//    @Transactional
     public void udpateUser(User updateUser) {
-        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+        updateUser.setPassword((updateUser.getPassword() != null && !updateUser.getPassword().trim().equals("")) ?
+                passwordEncoder.encode(updateUser.getPassword()) :
+                userRepository.findUserById(updateUser.getId()).getPassword());
         userRepository.save(updateUser);
     }
 
     @Override
+//    @Transactional
     public void deleteAllUsers() {
         userRepository.deleteAll();
     }
 
     @Override
+//    @Transactional
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> {
-                    return new UsernameNotFoundException("Пользователя не найдено");
-                });
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не найдено"));;
+
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+                roleService.mapRolesToAuthorities(user.getRoles()));
     }
 }

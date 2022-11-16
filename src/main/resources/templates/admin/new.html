@@ -10,7 +10,7 @@
         <tr>
             <td>Вы залогинены как</td>
             <td>
-                <a href="#" th:href="@{/user}" th:text="${logout.getUsername()}"/>
+                <a href="#" th:href="@{/user}" th:text="${logout.getEmail()}"/>
             </td>
             <td>
                 <input type="submit" value="Выйти"/>
@@ -20,14 +20,14 @@
 </form>
 <h2>Введите данные нового пользователя: </h2>
 <form th:method="POST" th:action="@{/admin}" th:object="${user}">
-    <label for="name">Введите логин:</label>
-    <input type="text" th:field="*{username}" id="name"/>
+    <label for="login">Введите логин:</label>
+    <input type="text" th:field="*{firstName}" id="login"/>
     <br><br>
-    <label for="surname">Введите пароль:</label>
-    <input type="text" th:field="*{password}" id="surname"/>
+    <label for="password">Введите пароль:</label>
+    <input type="text" th:field="*{password}" id="password"/>
     <br><br>
-    <label for="age">Введите email:</label>
-    <input type="text" th:field="*{email}" id="age"/>
+    <label for="email">Введите email:</label>
+    <input type="text" th:field="*{email}" id="email"/>
     <p>
         <label>Роли
             <input type="checkbox" name="roles"
