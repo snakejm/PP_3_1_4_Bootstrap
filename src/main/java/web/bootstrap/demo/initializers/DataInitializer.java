@@ -37,30 +37,15 @@ public class DataInitializer {
 
         User admin = userService.findUserByFirstName("admin");
         if (admin == null) {
-            admin = new User("admin", "admin", 35, "admin", "admin@mail.com",
+            admin = new User("admin", "admin", 35, "admin", "admin@mail.ru",
                     List.of(roleAdmin, roleUser));
             userService.addUser(admin);
         }
         User user = userService.findUserByFirstName("user");
         if (user == null) {
-            user = new User("user", "user", 30, "user", "user@mail.com",
+            user = new User("user", "user", 30, "user", "user@mail.ru",
                     List.of(roleUser));
             userService.addUser(user);
         }
-
-//        TODO DELETE User a
-        User a = userService.findUserByFirstName("a");
-        if (a == null) {
-            a = new User("a", "a", 31, "a", "a", List.of(roleAdmin, roleUser));
-            userService.addUser(a);
-        }
-
-        //        TODO DELETE User b
-        User b = userService.findUserByFirstName("b");
-        if (b == null) {
-            b = new User("b", "b", 31, "b", "b", List.of(roleUser));
-            userService.addUser(b);
-        }
-
     }
 }

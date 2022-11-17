@@ -11,15 +11,11 @@ public interface UserService extends UserDetailsService {
 
     List<User> getAllUsers();
 
-    User findUserById(long id);
-
     User findUserByFirstName(String firstName);
 
     User findUserByEmail(String email);
 
-    void udpateUser(User user);
-
-    void deleteAllUsers();
+    void updateUser(User user);
 
     void deleteUserById(long id);
 

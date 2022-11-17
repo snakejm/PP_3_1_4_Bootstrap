@@ -3,10 +3,8 @@ package web.bootstrap.demo.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import web.bootstrap.demo.models.User;
 import web.bootstrap.demo.repositories.UserRepository;
@@ -14,11 +12,10 @@ import web.bootstrap.demo.services.RoleService;
 import web.bootstrap.demo.services.UserService;
 
 import java.util.List;
-import java.util.Objects;
 
 
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -33,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    @Transactional
+    @Transactional
     public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -42,11 +39,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    @Override
-    public User findUserById(long id) {
-        return userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -60,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    @Transactional
-    public void udpateUser(User updateUser) {
+    @Transactional
+    public void updateUser(User updateUser) {
         updateUser.setPassword((updateUser.getPassword() != null && !updateUser.getPassword().trim().equals("")) ?
                 passwordEncoder.encode(updateUser.getPassword()) :
                 userRepository.findUserById(updateUser.getId()).getPassword());
@@ -69,22 +61,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    @Transactional
-    public void deleteAllUsers() {
-        userRepository.deleteAll();
-    }
-
-    @Override
-//    @Transactional
+    @Transactional
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не найдено"));;
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не найдено"));
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
                 roleService.mapRolesToAuthorities(user.getRoles()));
