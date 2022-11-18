@@ -1,11 +1,10 @@
 package web.bootstrap.demo.services;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
 import web.bootstrap.demo.models.User;
 
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
     void addUser(User user);
 
@@ -14,6 +13,8 @@ public interface UserService extends UserDetailsService {
     User findUserByFirstName(String firstName);
 
     User findUserByEmail(String email);
+
+    User findUserByUsername(String username);
 
     void updateUser(User user);
 

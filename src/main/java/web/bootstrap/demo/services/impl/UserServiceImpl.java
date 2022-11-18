@@ -1,14 +1,13 @@
 package web.bootstrap.demo.services.impl;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.bootstrap.demo.models.User;
 import web.bootstrap.demo.repositories.UserRepository;
-import web.bootstrap.demo.services.RoleService;
 import web.bootstrap.demo.services.UserService;
 
 import java.util.List;
@@ -20,13 +19,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
     }
 
     @Override
@@ -52,6 +49,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByUsername(String username) {
+        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        Hibernate.initialize(user.getRoles());
+        return user;
+    }
+
+    @Override
     @Transactional
     public void updateUser(User updateUser) {
         updateUser.setPassword((updateUser.getPassword() != null && !updateUser.getPassword().trim().equals("")) ?
@@ -66,12 +70,4 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не найдено"));
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                roleService.mapRolesToAuthorities(user.getRoles()));
-    }
 }
