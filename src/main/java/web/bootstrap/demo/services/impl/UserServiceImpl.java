@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserByUsername(String username) {
         User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
         Hibernate.initialize(user.getRoles());
